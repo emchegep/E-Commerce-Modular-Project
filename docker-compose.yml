@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+    # PHP service container
+    laravel_twelve_app:
+        build:
+            args:
+                user: laravel_twelve_app
+                uid: 1000
+            context: ./
+            dockerfile: Dockerfile
+        image: laravel_twelve_app_image
+        container_name: laravel_twelve_app
+        restart: unless-stopped
+        working_dir: /var/www
+        volumes:
+            - ./:/var/www
+        networks:
+            - laravel_twelve_app_network
+    # nginx service
+    laravel_twelve_webserver:
+        image: nginx:alpine
+        container_name: laravel_twelve_webserver
+        restart: unless-stopped
+        ports:
+            - "6162:80"
+        networks:
+            - laravel_twelve_app_network
+networks:
+    laravel_twelve_app_network:
+        driver: bridge
+
