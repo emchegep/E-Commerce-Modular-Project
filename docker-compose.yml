@@ -1,5 +1,3 @@
-version: '3'
-
 services:
     # PHP service container
     laravel_twelve_app:
