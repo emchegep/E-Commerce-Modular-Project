@@ -11,10 +11,17 @@ use Modules\Payment\PayBuddy;
 use Modules\Product\CartItem;
 use Modules\Product\CartItemCollection;
 use Modules\Product\Models\Product;
+use Modules\Product\Warehouse\ProductStockManager;
 use RuntimeException;
 
 class CheckoutController extends Controller
 {
+    public function __construct(
+        protected ProductStockManager $productStockManager,
+    )
+    {
+    }
+
     /**
      * @throws ValidationException
      */
@@ -46,12 +53,12 @@ class CheckoutController extends Controller
         ]);
 
         foreach ($cartItems->items() as $cartItem) {
-            $cartItem->product->decrement('stock');
+            $this->productStockManager->decrement($cartItem->product->id, $cartItem->quantity);
 
             $order->lines()->create([
                 'product_id' => $cartItem->product->id,
                 'quantity' => $cartItem->quantity,
-                'product_price_in_cents' => $cartItem->product->price_in_cents,
+                'product_price_in_cents' => $cartItem->product->priceInCents,
             ]);
         }
 
