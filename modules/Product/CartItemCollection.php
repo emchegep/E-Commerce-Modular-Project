@@ -22,7 +22,7 @@ class CartItemCollection
         $cartItems = collect($data)
             ->map(function ($productDetails) {
                 return new CartItem(
-                    Product::find($productDetails['id']),
+                    ProductDto::fromEloquentModel(Product::find($productDetails['id'])),
                     $productDetails['quantity']
                 );
             });
@@ -33,7 +33,7 @@ class CartItemCollection
     public function totalInCents()
     {
         return $this->items->sum(fn(CartItem $cartItem) =>
-            $cartItem->product->price_in_cents * $cartItem->quantity);
+            $cartItem->product->priceInCents * $cartItem->quantity);
     }
 
     /**
