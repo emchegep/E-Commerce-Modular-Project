@@ -3,14 +3,11 @@
 namespace Modules\Order\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Collection;
 use Illuminate\Validation\ValidationException;
 use Modules\Order\Http\Requests\CheckoutRequest;
 use Modules\Order\Models\Order;
 use Modules\Payment\PayBuddy;
-use Modules\Product\CartItem;
 use Modules\Product\CartItemCollection;
-use Modules\Product\Models\Product;
 use Modules\Product\Warehouse\ProductStockManager;
 use RuntimeException;
 
