@@ -47,9 +47,15 @@ class CheckoutControllerTest extends  TestCase
         // Order
         $this->assertTrue($order->user->is($user));
         $this->assertEquals(60000, $order->total_in_cents);
-        $this->assertEquals('paid', $order->status);
-        $this->assertEquals('PayBuddy', $order->payment_gateway);
+        $this->assertEquals('completed', $order->status);
+
+        // Payment
+        $payment = $order->lastPayment;
+        $this->assertEquals('paid', $payment->status);
+        $this->assertEquals('PayBuddy', $payment->payment_gateway);
         $this->assertEquals(36,strlen($order->payment_id));
+        $this->assertEquals(60000, $payment->total_in_cents);
+        $this->assertTrue($payment->user->is($user));
 
         // Order Lines
         $this->assertCount(2, $order->lines);
@@ -86,6 +92,4 @@ class CheckoutControllerTest extends  TestCase
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['payment_token']);
     }
-
-
 }
