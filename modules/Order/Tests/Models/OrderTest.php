@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Order\Tests\Order\Models;
+namespace Modules\Order\Tests\Models;
 
 
 use JetBrains\PhpStorm\NoReturn;

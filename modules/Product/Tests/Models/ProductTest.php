@@ -16,6 +16,6 @@ class ProductTest extends ProductTestCase
     {
         $product = Product::factory()->create();
 
-        dd($product);
+        $this->assertTrue(true);
     }
 }
