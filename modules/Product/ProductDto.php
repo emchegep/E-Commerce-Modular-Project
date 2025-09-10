@@ -10,9 +10,7 @@ readonly class ProductDto
         public int $id,
         public int $priceInCents,
         public int $unitsInStock,
-    )
-    {
-    }
+    ) {}
 
     public static function fromEloquentModel(Product $product): self
     {

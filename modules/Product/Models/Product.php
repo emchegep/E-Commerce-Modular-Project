@@ -10,6 +10,7 @@ use Modules\Product\Database\Factories\ProductFactory;
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @method static \Modules\Product\Database\Factories\ProductFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product newQuery()
@@ -17,6 +18,7 @@ use Modules\Product\Database\Factories\ProductFactory;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class Product extends Model

@@ -15,9 +15,7 @@ class CheckoutController extends Controller
 {
     public function __construct(
         protected ProductStockManager $productStockManager,
-    )
-    {
-    }
+    ) {}
 
     /**
      * @throws ValidationException

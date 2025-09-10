@@ -7,8 +7,7 @@ use NumberFormatter;
 
 final class PayBuddy
 {
-    public function charge(string $token, int $amountInCents, string
-    $statementDescription): array
+    public function charge(string $token, int $amountInCents, string $statementDescription): array
     {
         $this->validateToken($token);
 
@@ -20,14 +19,14 @@ final class PayBuddy
             'amount_in_cents' => $amountInCents,
             'localized_amount' => $numberFormatter
                 ->format($amountInCents / 100),
-            'statement_description' =>$statementDescription,
+            'statement_description' => $statementDescription,
             'created_at' => now()->toDateTimeString(),
         ];
     }
 
     public static function make(): PayBuddy
     {
-        return new self();
+        return new self;
     }
 
     public static function validToken(): string

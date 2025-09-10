@@ -4,7 +4,4 @@ namespace Modules\Shipment\Tests;
 
 use Tests\TestCase;
 
-class ShipmentTestCase extends TestCase
-{
-
-}
+class ShipmentTestCase extends TestCase {}

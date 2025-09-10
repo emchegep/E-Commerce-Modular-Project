@@ -13,19 +13,18 @@ use Modules\Product\Models\Product;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-class CheckoutControllerTest extends  TestCase
+class CheckoutControllerTest extends TestCase
 {
     use RefreshDatabase;
+
     #[Test]
     public function it_successfully_creates_an_order(): void
     {
         $user = UserFactory::new()->create();
         $products = ProductFactory::new()->count(2)->create(
             new Sequence(
-                ['name' => 'Very expensive air fryer', 'price_in_cents' =>
-                    10000, 'stock' => 10],
-                ['name' => 'Macbook Pro M3', 'price_in_cents' =>
-                    50000, 'stock' => 10],
+                ['name' => 'Very expensive air fryer', 'price_in_cents' => 10000, 'stock' => 10],
+                ['name' => 'Macbook Pro M3', 'price_in_cents' => 50000, 'stock' => 10],
             )
         );
 
@@ -36,9 +35,9 @@ class CheckoutControllerTest extends  TestCase
                 'payment_token' => $paymentToken,
                 'products' => [
                     ['id' => $products->first()->id, 'quantity' => 1],
-                    ['id' => $products->last()->id, 'quantity' => 1]
-                ]
-        ]));
+                    ['id' => $products->last()->id, 'quantity' => 1],
+                ],
+            ]));
 
         $response->assertStatus(201);
 
@@ -53,7 +52,7 @@ class CheckoutControllerTest extends  TestCase
         $payment = $order->lastPayment;
         $this->assertEquals('paid', $payment->status);
         $this->assertEquals('PayBuddy', $payment->payment_gateway);
-        $this->assertEquals(36,strlen($order->payment_id));
+        $this->assertEquals(36, strlen($order->payment_id));
         $this->assertEquals(60000, $payment->total_in_cents);
         $this->assertTrue($payment->user->is($user));
 
@@ -85,9 +84,9 @@ class CheckoutControllerTest extends  TestCase
             ->postJson(route('order:checkout', [
                 'payment_token' => $paymentToken,
                 'products' => [
-                    ['id' => $product->id, 'quantity' => 1]
-                ]
-        ]));
+                    ['id' => $product->id, 'quantity' => 1],
+                ],
+            ]));
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['payment_token']);

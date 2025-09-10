@@ -7,5 +7,5 @@ return [
         'completed' => 'Completed',
         'canceled' => 'Canceled',
     ],
-    'max_items_per_order' => 5
+    'max_items_per_order' => 5,
 ];

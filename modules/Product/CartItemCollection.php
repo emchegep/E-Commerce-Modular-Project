@@ -8,14 +8,11 @@ use Modules\Product\Models\Product;
 class CartItemCollection
 {
     /**
-     * @param Collection<CartItem> $items
+     * @param  Collection<CartItem>  $items
      */
     public function __construct(
         public Collection $items,
-    )
-    {
-
-    }
+    ) {}
 
     public static function fromCheckoutData(array $data): CartItemCollection
     {
@@ -32,7 +29,7 @@ class CartItemCollection
 
     public function totalInCents()
     {
-        return $this->items->sum(fn(CartItem $cartItem) =>
+        return $this->items->sum(fn (CartItem $cartItem) =>
             $cartItem->product->priceInCents * $cartItem->quantity);
     }
 

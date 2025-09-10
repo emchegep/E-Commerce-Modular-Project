@@ -4,7 +4,7 @@ namespace Modules\Product\Warehouse;
 
 use Modules\Product\Models\Product;
 
-class ProductStockManager
+final class ProductStockManager
 {
     public function decrement(int $productId, int $quantity): void
     {

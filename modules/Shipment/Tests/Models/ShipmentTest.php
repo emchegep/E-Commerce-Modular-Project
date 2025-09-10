@@ -9,7 +9,7 @@ class ShipmentTest extends ShipmentTestCase
 {
     public function test_it_creates_shipment()
     {
-        $shipment = new Shipment();
+        $shipment = new Shipment;
 
         $this->assertInstanceOf(Shipment::class, $shipment);
     }

@@ -11,6 +11,7 @@ use Modules\Product\Models\Product;
 class ProductFactory extends Factory
 {
     protected $model = Product::class;
+
     /**
      * Define the model's default state.
      *
