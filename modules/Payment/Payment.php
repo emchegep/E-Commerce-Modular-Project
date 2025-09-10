@@ -11,6 +11,7 @@ use Modules\Order\Models\Order;
 class Payment extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 
     public function user(): BelongsTo
