@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Modules\Payment\Payment;
+use Modules\Product\CartItem;
+use Modules\Product\CartItemCollection;
 
 /**
  * @property int $id
@@ -36,6 +38,10 @@ class Order extends Model
         'total_in_cents' => 'integer',
     ];
 
+    public const PENDING = 'pending';
+
+    public const COMPLETED = 'completed';
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -59,5 +65,37 @@ class Order extends Model
     public function url(): string
     {
         return route('order:orders.show', $this);
+    }
+
+    public static function startForUser(int $userId): self
+    {
+        return self::make([
+            'user_id' => $userId,
+            'status' => self::PENDING,
+        ]);
+    }
+
+    /**
+     * @param  CartItemCollection<CartItem>  $items
+     */
+    public function addLinesFromCartItems(CartItemCollection $items): void
+    {
+        foreach ($items->items() as $item) {
+            $this->lines->push(OrderLine::make([
+                'product_id' => $item->product->id,
+                'quantity' => $item->quantity,
+                'product_price_in_cents' => $item->product->priceInCents,
+            ]));
+        }
+
+        $this->total_in_cents = $this->lines->sum(fn (OrderLine $line) => $line->product_price_in_cents);
+    }
+
+    public function fulfill(): void
+    {
+        $this->status = self::COMPLETED;
+
+        $this->save();
+        $this->lines()->saveMany($this->lines);
     }
 }

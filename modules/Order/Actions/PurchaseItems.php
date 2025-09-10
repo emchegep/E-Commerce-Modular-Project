@@ -32,21 +32,15 @@ class PurchaseItems
             $paymentProvider,
             $paymentToken
         ) {
-            $order = Order::query()->create([
-                'user_id' => $userId,
-                'total_in_cents' => $orderTotalInCents,
-                'status' => 'completed',
-            ]);
+
+            $order = Order::startForUser($userId);
+            $order->addLinesFromCartItems($items);
+            $order->fulfill();
 
             foreach ($items->items() as $cartItem) {
                 $this->productStockManager->decrement($cartItem->product->id, $cartItem->quantity);
-
-                $order->lines()->create([
-                    'product_id' => $cartItem->product->id,
-                    'quantity' => $cartItem->quantity,
-                    'product_price_in_cents' => $cartItem->product->priceInCents,
-                ]);
             }
+
             $this->createPaymentForOrder->handle(
                 $order->id,
                 $userId,
