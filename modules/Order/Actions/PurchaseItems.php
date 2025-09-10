@@ -2,43 +2,31 @@
 
 namespace Modules\Order\Actions;
 
-use Modules\Order\Exceptions\PaymentFailedException;
 use Modules\Order\Models\Order;
+use Modules\Payment\Actions\CreatePaymentForOrder;
 use Modules\Payment\PayBuddy;
 use Modules\Product\CartItemCollection;
 use Modules\Product\Warehouse\ProductStockManager;
-use RuntimeException;
 
 class PurchaseItems
 {
     public function __construct(
         protected ProductStockManager $productStockManager,
+        protected CreatePaymentForOrder $createPaymentForOrder,
     ) {}
 
     public function handle(
         CartItemCollection $items,
         PayBuddy $paymentProvider,
         string $paymentToken,
-        int $userId): Order
-    {
+        int $userId
+    ): Order {
         $orderTotalInCents = $items->totalInCents();
 
-        try {
-            $charge = $paymentProvider->charge(
-                $paymentToken,
-                $orderTotalInCents,
-                'Modularization'
-            );
-        } catch (RuntimeException) {
-            throw PaymentFailedException::dueToInvalidToken();
-        }
-
-        $order = Order::create([
+        $order = Order::query()->create([
             'user_id' => $userId,
             'total_in_cents' => $orderTotalInCents,
             'status' => 'completed',
-            'payment_gateway' => 'PayBuddy',
-            'payment_id' => $charge['id'],
         ]);
 
         foreach ($items->items() as $cartItem) {
@@ -50,14 +38,13 @@ class PurchaseItems
                 'product_price_in_cents' => $cartItem->product->priceInCents,
             ]);
         }
-
-        $payment = $order->payments()->create([
-            'user_id' => $userId,
-            'total_in_cents' => $orderTotalInCents,
-            'status' => 'paid',
-            'payment_gateway' => 'PayBuddy',
-            'payment_id' => $charge['id'],
-        ]);
+        $this->createPaymentForOrder->handle(
+            $order->id,
+            $userId,
+            $orderTotalInCents,
+            $paymentProvider,
+            $paymentToken
+        );
 
         return $order;
     }

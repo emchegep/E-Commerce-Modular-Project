@@ -56,7 +56,7 @@ class CheckoutControllerTest extends TestCase
         $payment = $order->lastPayment;
         $this->assertEquals('paid', $payment->status);
         $this->assertEquals('PayBuddy', $payment->payment_gateway);
-        $this->assertEquals(36, strlen($order->payment_id));
+        $this->assertEquals(36, strlen($payment->payment_id));
         $this->assertEquals(60000, $payment->total_in_cents);
         $this->assertTrue($payment->user->is($user));
 

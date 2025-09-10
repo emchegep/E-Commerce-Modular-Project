@@ -29,8 +29,6 @@ class Order extends Model
         'user_id',
         'total_in_cents',
         'status',
-        'payment_gateway',
-        'payment_id',
     ];
 
     protected $casts = [
