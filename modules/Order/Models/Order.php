@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Modules\Order\Exceptions\OrderMissingOrderLinesException;
 use Modules\Payment\Payment;
 use Modules\Product\CartItem;
 use Modules\Product\CartItemCollection;
@@ -91,8 +92,14 @@ class Order extends Model
         $this->total_in_cents = $this->lines->sum(fn (OrderLine $line) => $line->product_price_in_cents);
     }
 
+    /**
+     * @throws OrderMissingOrderLinesException|\Throwable
+     */
     public function fulfill(): void
     {
+        throw_if($this->lines->isEmpty(),
+            OrderMissingOrderLinesException::class);
+
         $this->status = self::COMPLETED;
 
         $this->save();

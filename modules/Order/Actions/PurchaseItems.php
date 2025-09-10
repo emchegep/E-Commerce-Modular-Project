@@ -23,12 +23,10 @@ class PurchaseItems
         string $paymentToken,
         int $userId
     ): Order {
-        $orderTotalInCents = $items->totalInCents();
 
         return $this->databaseManager->transaction(function () use (
             $items,
             $userId,
-            $orderTotalInCents,
             $paymentProvider,
             $paymentToken
         ) {
@@ -44,7 +42,7 @@ class PurchaseItems
             $this->createPaymentForOrder->handle(
                 $order->id,
                 $userId,
-                $orderTotalInCents,
+                $items->totalInCents(),
                 $paymentProvider,
                 $paymentToken
             );
